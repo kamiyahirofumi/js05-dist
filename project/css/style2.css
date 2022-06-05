@@ -1,0 +1,115 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+  }
+
+#mainArea{
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+#playerArea{
+    color: white;
+    background-color:green;
+    height: 100%;
+    width: 300px; 
+}
+.picArea{
+    width: 100%; 
+    text-align: center;
+}
+#sota{
+    width: 80%;
+}
+#shasho{
+    width: 80%;
+}
+.commentArea{
+    width: 95%;
+}
+.saiSpace{
+    margin-top: 20px;
+    text-align: center;
+}
+#reBtn{
+    width: 300px;
+    position: fixed;
+    bottom: 0px;
+}
+
+#mapArea{
+    flex: 1;
+    position: relative;
+}
+#mapArea2{
+    height:100%;
+    width:100%;
+    position:absolute;
+}
+#myMap{
+    width:100%; 
+    height:100%;
+}
+#playerDice{
+    width: 80px;
+    height: 80px;
+    position:absolute;
+    left: 70px;
+    top: 100px;
+    text-align: center;
+}
+#comDice{
+    width: 80px;
+    height: 80px;
+    position:absolute;
+    right: 70px;
+    bottom: 100px;
+    text-align: center;
+}
+.saiGazo{
+    width:100%;
+}
+
+#donSpace{
+    margin-top: 0;
+    background-image:url(../don.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    width: 100%;
+    /* font-size: 100px; */
+    text-align: center;
+}
+#donSpace h1{
+    font-size: 90px;
+    color: aliceblue;
+}    
+
+#donSpace ul{
+    font-size: 25px;
+    font-weight: bold;
+    color: aliceblue;
+}    
+#donSpace a{
+    font-size: 25px;
+    font-weight: bold;
+    background-color: white;
+}    
+
+
+#comArea{
+    color: white;
+    background-color: red; 
+    height: 100%;
+    width: 300px; 
+}
+#comArea ul{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#resultSpace a{
+    color:white;
+}

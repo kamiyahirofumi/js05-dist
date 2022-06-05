@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- さいころ -->
+    <p><input type="button" id="btn" value="サイコロを振る" ></p>
+    <div id="playerDice"></div>
+    <div id="comDice"></div>
+
+       <!-- JQuery -->
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+       <!-- JQuery -->
+
+    <script>
+    let sai1;
+    let sai2;
+    let playerPosition = 0;
+    let comPosition = 16;
+    
+        $("#btn").on("click",function(){
+            sai1 = Math.floor(Math.random() * 6) + 1;		// 1から6までの適当な数字
+        	saiGazo1 = sai1 + ".png";							// 画像ファイル名生成
+            $("#playerDice").html(`<img src="${saiGazo1}" >`);
+            playerPosition = playerPosition + sai1;
+            console.log(playerPosition);            
+
+            sai2 = Math.floor(Math.random() * 6) + 1;		// 1から6までの適当な数字
+        	saiGazo2 = sai2 + ".png";							// 画像ファイル名生成
+            $("#comDice").html(`<img src="${saiGazo2}" >`);
+            comPosition = comPosition - sai2;
+            console.log(comPosition);
+
+            if(playerPosition > comPosition){
+                playerPosition = 0;
+                comPosition = 0;               
+                console.log(playerPosition);
+                console.log(comPosition);
+            }
+        });        
+        console.log(playerPosition);
+        console.log(comPosition);
+
+        // console.log(localStorage.getItem("コンピューター"));
+        
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>どんじゃんけん</title>
+<link rel="stylesheet" href="./css/style2.css">
+</head>
+<body>
+ 
+
+<!-- メイン -->
+<div id = mainArea>
+<!-- PlayerArea -->
+<div id=playerArea>
+    PlayerArea
+    <!-- 写真 -->
+    <div class="picArea">
+        <img id = "sota" src="./Sota.jpg">
+    </div>
+    <!-- コメント -->
+    <div class = "commentArea"></div>
+    <!-- さいころ -->
+    <div class = "saiSpace">
+        <!-- <p id="saiBtnP"><input type="button" id="saiBtn" value="サイコロを振る" ></p>
+        <p id="checkBtnP"><input type="button" id="checkBtn" value="出発する" ></p> -->
+        <!-- <div id="playerDice"></div> -->
+        <!-- <div id="comDice"></div> -->
+</div>
+
+    <!-- 勝敗画面 -->
+<div id = "resultSpace" style="width:100%; text-align: center ">
+
+</div>
+
+<!-- <p id="reBtnP"><input type="button" id="reBtn" value="はじめからやり直す" ></p> -->
+
+
+</div>
+<!-- /PlayerArea -->
+
+<!-- MapArea -->
+<div id="mapArea">
+    <div id="mapArea2">
+        <div id="view"></div>
+        <div id="myMap"></div>
+    </div>
+    <div id="playerDice"></div>
+    <div id="comDice"></div>
+</div>
+<!-- /MapArea -->
+
+<!-- ComArea -->
+<div id=comArea>ComArea
+    <!-- さいころ -->
+    <!-- <div class = "saiSpace"> -->
+        <!-- <div id="comDice"></div> -->
+    <!-- </div> -->
+    <!-- 写真 -->
+    <div class="picArea">
+        <img id = "shasho" src="./2654.png">
+    </div>
+    <!-- コメント -->
+    <div class = "commentArea2"></div>
+    <!-- さいころ -->
+  </div>
+
+
+<!-- /ComArea -->
+
+</div>
+<!-- /メイン -->
+
+
+<!-- jQuery&GoogleMapsAPI -->
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<!-- /jQuery&GoogleMapsAPI -->
+<script src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AuUFbBvb7CGHaXBMLiv_bfGS9_Ab76E37gS8qzrWqDf8Mj4qAMyBaKmYbEXy5ss2" async defer></script>
+<script src="js/BmapQuery.js"></script>
+
+<!-- javascript -->
+<script>
+// 不要画面を隠す
+// $("#resultSpace").hide();
+$("#checkBtnP").hide();
+// 各種定義
+// 駅オブジェクト
+const stations = [
+    {
+    name: "東京駅",
+    lat: 35.6809591, 
+    lon:  139.7673068
+    },
+    {
+    name: "上野駅",
+    lat: 35.7119109 , 
+    lon: 139.7762008
+    },
+    {
+    name: "大宮駅",
+    lat: 35.9062039 , 
+    lon: 139.6237359
+    },    {
+    name: "仙台駅",
+    lat: 38.260247, 
+    lon: 140.879723
+    },    {
+    name: "古川駅",
+    lat: 38.5706105 , 
+    lon: 140.9677078
+    },    {
+    name: "くりこま高原駅",
+    lat: 38.74893 , 
+    lon: 141.0716272
+    },    {
+    name: "一ノ関駅",
+    lat: 38.9267693, 
+    lon: 141.1387756
+    },    {
+    name: "水沢江刺駅",
+    lat: 39.1452414, 
+    lon: 141.1886675
+    },
+    {
+    name: "北上駅",
+    lat: 39.281279502116, 
+    lon: 141.12175165265
+    },
+    {
+    name: "新花巻駅",
+    lat: 39.4058401, 
+    lon: 141.173526
+    },
+    {
+    name: "盛岡駅",
+    lat: 39.7014667, 
+    lon: 141.1363722
+    },
+    {
+    name: "いわて沼宮内駅",
+    lat: 39.9603688, 
+    lon: 141.2170959
+    },
+    {
+    name: "二戸駅",
+    lat: 40.2596966, 
+    lon: 141.2857922
+    },
+    {
+    name: "八戸駅",
+    lat: 40.509200, 
+    lon: 141.431499
+    },
+    {
+    name: "七戸十和田駅",
+    lat: 40.7199775, 
+    lon: 141.1537418
+    },
+    {
+    name: "新青森駅",
+    lat: 40.8280672, 
+    lon:  140.6934308
+    },
+    {
+    name: "東京駅",
+    lat: 35.6809591, 
+    lon:  139.7673068
+    } 
+];
+
+// プレイヤーの場所
+let playerPosition = localStorage.getItem("プレイヤー");
+playerPosition = Number(playerPosition);
+if(playerPosition == 0){
+    playerPosition = 0;
+}
+
+let comPosition = localStorage.getItem("コンピューター");
+comPosition = Number(comPosition);
+if(comPosition == 0){
+    comPosition = stations.length-2;
+}
+console.log(playerPosition);
+console.log(comPosition);
+
+// プレイヤー画面
+let passedStations
+if(playerPosition==0){
+    passedStations = "無し"; 
+}else{
+    passedStations = stations[0].name;
+    for(i=2; i<playerPosition; i++){
+        passedStations += "、" + stations[i].name;  
+}}
+console.log(passedStations);
+let toGoal1 = stations.length - playerPosition -2;
+console.log(stations.length);
+console.log(playerPosition);
+
+
+    $(".commentArea").html(`
+        <h2 style="text-align: center;">『さあ、じゃんけんだ』</h2>
+        <h2 style="text-align: center;">『何を出そうかな？』</h2>
+        <ul style="font-size: 20px;">
+            <li id="gu_btn" >グー</li>
+            <li id="cho_btn">チョキ</li>
+            <li id="par_btn">パー</li>
+        </ul>
+        `);
+
+// コンピューター画面
+let fromStart2 = stations.length - comPosition -2; 
+let passedStations2
+if(comPosition==stations.length-2){
+    passedStations2 = "無し"; 
+}else{
+    passedStations2 = stations[stations.length-2].name;
+    for(i=2; i < fromStart2; i++){
+        passedStations2 += "、" + stations[stations.length-2-i].name;  
+}}
+console.log(passedStations2);
+let toGoal2 = comPosition;
+
+
+
+$(".commentArea2").html(`
+    <h2 style="text-align: center;">『よし負けないぞ！』</h2>
+    <h2 style="text-align: center;">『何を出そうかな？』</h2>
+`);
+
+// じゃんけん
+function showResult(myHand, pcHand){
+  const resultNum = (myHand - pcHand + 3) % 3; // 0: あいこ, 1: 負け, 2: 勝ち
+  if (resultNum === 0) {
+    $(".commentArea").html(`
+        <h2 style="text-align: center;">『あいこだ』</h2>
+        <h2 style="text-align: center;">『そうだな、次は』</h2>
+        <ul style="font-size: 20px;">
+            <li id="gu_btn" >グー</li>
+            <li id="cho_btn">チョキ</li>
+            <li id="par_btn">パー</li>
+        </ul>
+        `);
+        $(".commentArea2").html(`
+        <h2 style="text-align: center;">『あいこだ』</h2>
+        <h2 style="text-align: center;">『次は何を出そうかな？』</h2>
+        `);
+        doJanken();
+  } else if (resultNum === 1) {
+    playerPosition = 0;
+    localStorage.setItem("プレイヤー",playerPosition);    
+    $(".commentArea").html(`
+        <h2 style="text-align: center;">『負けちゃった...』</h2>
+        <h2 style="text-align: center;">『${stations[0].name}に戻ろ。』</h2>
+        `);
+        $(".commentArea2").html(`
+        <h2 style="text-align: center;">『よし勝ったぞ！』</h2>
+        <h2 style="text-align: center;">『先に進もう！』</h2>
+        `);
+    $('#resultSpace').html('<a href="./kadai.html"> 東京駅に戻る。</a>');
+  } else if (resultNum === 2) {
+    comPosition = 0;               
+    localStorage.setItem("コンピューター",comPosition);
+    $(".commentArea").html(`
+        <h2 style="text-align: center;">『やった勝った！』</h2>
+        <h2 style="text-align: center;">『先を急ぐぞ！』</h2>
+        `);
+        $(".commentArea2").html(`
+        <h2 style="text-align: center;">『負けっちゃった。』</h2>
+        <h2 style="text-align: center;">『${stations[stations.length - 2].name}に一旦戻ろう。』</h2>
+        `);
+        $('#resultSpace').html('<a href="./kadai.html" input type="button">先に進む。</a>');
+  }
+}
+
+function showPcHand(pcHand){
+  if (pcHand === 0) {
+  $('#comDice').html(`
+  <div style="font-weight: bold;">車掌さん</div>
+  <img src="./gu.png" class ="saiGazo" >
+  `);
+  } else if (pcHand === 1) {
+  $('#comDice').html(`
+  <div style="font-weight: bold;">車掌さん</div>
+  <img src="./choki.png" class ="saiGazo" >
+  `);
+  }else{
+  $('#comDice').html(`
+  <div style="font-weight: bold;">車掌さん</div>
+  <img src="./pa.png" class ="saiGazo" >
+  `);
+}}
+
+function doJanken(){
+// グーのボタンがクリックされたら実行する
+$('#gu_btn').on('click', function(){
+  const myHand = 0; // グーを設定
+  const pcHand = Math.floor(Math.random() * 3); // コンピュータの手を計算
+  $('#playerDice').html(`
+  <div style="font-weight: bold;">プレイヤー</div>
+  <img src="./gu.png" class ="saiGazo" >
+
+  `);
+// コンピュータの手を表示
+showPcHand(pcHand);
+
+// じゃんけんの結果を表示
+showResult(myHand,pcHand);
+
+console.log(myHand);
+console.log(pcHand);
+
+});
+
+// チョキのボタンがクリックされたら実行する
+$('#cho_btn').on('click', function(){
+  const myHand = 1; // チョキを設定
+  const pcHand = Math.floor(Math.random() * 3); // コンピュータの手を計算
+  $('#playerDice').html(`
+  <div style="font-weight: bold;">プレイヤー</div>
+  <img src="./choki.png" class ="saiGazo" >
+
+  `);
+
+// コンピュータの手を表示
+showPcHand(pcHand);
+
+// じゃんけんの結果を表示
+showResult(myHand,pcHand);
+
+console.log(myHand);
+console.log(pcHand);
+});
+
+// パーのボタンがクリックされたら実行する
+$('#par_btn').on('click', function(){
+  const myHand = 2; // パーを設定
+  const pcHand = Math.floor(Math.random() * 3); // コンピュータの手を計算
+  $('#playerDice').html(`
+  <div style="font-weight: bold;">プレイヤー</div>
+  <img src="./pa.png" class ="saiGazo" >
+
+  `);
+
+// コンピュータの手を表示
+showPcHand(pcHand);
+
+// じゃんけんの結果を表示
+  showResult(myHand,pcHand);
+
+  console.log(myHand);
+console.log(pcHand);
+});
+}
+
+doJanken();
+
+// はじめからやり直す
+// $("#reBtn").on("click",function(){
+//     localStorage.clear();
+//     document.location.reload();
+// })
+            
+// 地図
+//****************************************************************************************
+// BingMaps&BmapQuery
+//****************************************************************************************
+//Init
+function GetMap(){
+    //------------------------------------------------------------------------
+    //1. Instance
+    //------------------------------------------------------------------------
+    const map = new Bmap("#myMap");
+    
+    //------------------------------------------------------------------------
+    //2. Display Map
+    //------------------------------------------------------------------------
+    map.startMap(38.5, 141.0, "load", 6); //The place is Bellevue.
+
+    //----------------------------------------------------
+    //3. Add Pushpin-Text
+    // pinText(lat, lon, "title", "subtitle", "text");
+    //----------------------------------------------------
+    let pin1 = map.pinText(stations[playerPosition].lat, stations[playerPosition].lon, "プレイヤー",`現在地は${stations[playerPosition].name}です`,"P");
+    // let pin1 = map.pin(stations[playerPosition].lat, stations[playerPosition].lon,"#008000");
+    let pin2 = map.pinText(stations[comPosition].lat, stations[comPosition].lon, "車掌さん",`現在地は${stations[comPosition].name}です`,"C");
+    // let pin2 = map.pin(stations[comPosition].lat, stations[comPosition].lon, "#ff0000");
+
+    // Directions[START]
+    map.direction("#direction", "driving", "東京駅", "新青森駅", );  //Direction Methed
+
+
+    }
+// 地図終わり
+
+</script>
+
+</body>
+</html>
